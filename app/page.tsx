@@ -19,11 +19,38 @@ const Header = () => {
 };
 
 const Section = () => {
+  const [element, setElement] = useState("");
+
+  const handleElementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setElement(e.target.value);
+  };
+
+  const [elementList, setElementList] = useState<string[]>([]);
+
+  const submitElement = () => {
+    if (!element) return;
+
+    setElementList((item) => [...item, element]);
+    setElement("");
+  };
+
   return (
     <div className="relative w-full h-[80%]">
       <div className="pl-3">
-        <TextInput direction="left" placeholder="변수명 입력" />
-        <Button direction="right" text="확인" />
+        <TextInput
+          direction="left"
+          placeholder="요소 입력"
+          value={element}
+          onChange={handleElementChange}
+          onKeyDown={(e) => e.key === "Enter" && submitElement()}
+        />
+        <Button direction="right" text="확인" onClick={submitElement} />
+      </div>
+
+      <div className="pl-3 pt-3">
+        {elementList.map((item, index) => (
+          <div key={index}>{item}</div>
+        ))}
       </div>
     </div>
   );
