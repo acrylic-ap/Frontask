@@ -5,12 +5,13 @@ import { useEffect, useState, useRef } from "react";
 
 type TextInputProps = {
   direction?: "left" | "right" | "none";
+  length?: "short" | "long";
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export default function TextInput({ direction, ...props }: TextInputProps) {
   return (
     <input
-      className={`relative py-1 pl-2
+      className={`relative w-30 py-1 px-2
   border rounded
   outline-none 
   ${

@@ -3,7 +3,8 @@
 import { useAtom } from "jotai";
 import { useEffect, useState, useRef } from "react";
 import Button from "@/app/common/components/Button";
-import TextInput from "./common/components/TextInput";
+import TextInput from "@/app/common/components/TextInput";
+import { Component } from "./components/Component";
 
 const Header = () => {
   return (
@@ -19,19 +20,23 @@ const Header = () => {
 };
 
 const Section = () => {
-  const [element, setElement] = useState("");
+  const [componentList, setComponentList] = useState<Set<string>>(
+    new Set<string>(),
+  );
+  const [component, setComponent] = useState("");
 
-  const handleElementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setElement(e.target.value);
+  const handleComponentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComponent(e.target.value);
   };
 
-  const [elementList, setElementList] = useState<string[]>([]);
+  const submitComponent = () => {
+    if (!component) return;
 
-  const submitElement = () => {
-    if (!element) return;
+    if (!componentList.has(component))
+      setComponentList((item) => item.add(component));
+    else alert("이미 존재하는 컴포넌트입니다.");
 
-    setElementList((item) => [...item, element]);
-    setElement("");
+    setComponent("");
   };
 
   return (
@@ -39,17 +44,17 @@ const Section = () => {
       <div className="pl-3">
         <TextInput
           direction="left"
-          placeholder="요소 입력"
-          value={element}
-          onChange={handleElementChange}
-          onKeyDown={(e) => e.key === "Enter" && submitElement()}
+          placeholder="컴포넌트 입력"
+          value={component}
+          onChange={handleComponentChange}
+          onKeyDown={(e) => e.key === "Enter" && submitComponent()}
         />
-        <Button direction="right" text="확인" onClick={submitElement} />
+        <Button direction="right" text="확인" onClick={submitComponent} />
       </div>
 
-      <div className="pl-3 pt-3">
-        {elementList.map((item, index) => (
-          <div key={index}>{item}</div>
+      <div className="pl-3 pt-5">
+        {Array.from(componentList).map((name) => (
+          <Component name={name} />
         ))}
       </div>
     </div>
