@@ -24,7 +24,7 @@ export const Component = ({ name }: { name: string }) => {
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 border p-5">
       <div className="flex flex-row items-center mb-2">
         <p className="text-lg mr-2">{name}</p>
         <TextInput
@@ -38,11 +38,15 @@ export const Component = ({ name }: { name: string }) => {
       </div>
 
       <div className="flex flex-row">
-        {elementList?.get(name)?.map((item, index) => (
-          <div className="border" key={index}>
-            {item}
-          </div>
-        ))}
+        {elementList?.get(name)?.length ? (
+          elementList?.get(name)?.map((item, index) => (
+            <div className="border px-4 py-1" key={index}>
+              {item}
+            </div>
+          ))
+        ) : (
+          <div>요소가 없습니다.</div>
+        )}
       </div>
     </div>
   );
