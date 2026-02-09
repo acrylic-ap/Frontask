@@ -40,8 +40,24 @@ export const Component = ({ name }: { name: string }) => {
       <div className="flex flex-row">
         {elementList?.get(name)?.length ? (
           elementList?.get(name)?.map((item, index) => (
-            <div className="border px-4 py-1" key={index}>
-              {item}
+            <div
+              className="border px-4 py-1
+            flex flex-col"
+              key={index}
+            >
+              <text className="text-lg">{item}</text>
+
+              <div className="flex">
+                <label className="mr-2">데이터 유형</label>
+                <select
+                  className="border rounded
+                text-white bg-black
+                outline-none"
+                >
+                  <option>Temporary</option>
+                  <option>Payload</option>
+                </select>
+              </div>
             </div>
           ))
         ) : (
