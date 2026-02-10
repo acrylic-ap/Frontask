@@ -23,6 +23,8 @@ export const Component = ({ name }: { name: string }) => {
     setElement("");
   };
 
+  const [dataType, setDataType] = useState("temp");
+
   return (
     <div className="mb-4 border p-5">
       <div className="flex flex-row items-center mb-2">
@@ -53,11 +55,29 @@ export const Component = ({ name }: { name: string }) => {
                   className="border rounded
                 text-white bg-black
                 outline-none"
+                  value={dataType}
+                  onChange={(e) => setDataType(e.target.value)}
                 >
-                  <option>Temporary</option>
-                  <option>Payload</option>
+                  <option value="temp" selected>
+                    Temporary
+                  </option>
+                  <option value="payload">Payload</option>
                 </select>
               </div>
+              {dataType === "payload" && (
+                <div className="flex">
+                  <label className="mr-2">데이터 그룹</label>
+                  <select
+                    className="border rounded
+                text-white bg-black
+                outline-none"
+                    value={dataType}
+                    onChange={(e) => setDataType(e.target.value)}
+                  >
+                    {}
+                  </select>
+                </div>
+              )}
             </div>
           ))
         ) : (
