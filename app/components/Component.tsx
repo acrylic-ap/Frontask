@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../common/components/Button";
 import TextInput from "../common/components/TextInput";
-import { elementListState } from "../atom/mainAtom";
+import { elementListState, ListType } from "../atom/mainAtom";
 import { useAtom } from "jotai";
 
 export const Component = ({ name }: { name: string }) => {
@@ -15,15 +15,20 @@ export const Component = ({ name }: { name: string }) => {
   const submitElement = () => {
     if (!element) return;
 
-    setElementList((item) => {
-      if (!item.has(name)) return item.set(name, [element]);
-      else return item.set(name, [...(item.get(name) || []), element]);
+    setElementList((prev) => {
+      const outer = new Map(prev);
+      const inner = new Map(outer.get(name) ?? []);
+
+      if (inner.has(element)) return prev; // ❗ 추가 안 함
+
+      inner.set(element, { type: "temp" });
+      outer.set(name, inner);
+
+      return outer;
     });
 
     setElement("");
   };
-
-  const [dataType, setDataType] = useState("temp");
 
   return (
     <div className="mb-4 border p-5">
@@ -40,46 +45,47 @@ export const Component = ({ name }: { name: string }) => {
       </div>
 
       <div className="flex flex-row">
-        {elementList?.get(name)?.length ? (
-          elementList?.get(name)?.map((item, index) => (
-            <div
-              className="border px-4 py-1
-            flex flex-col"
-              key={index}
-            >
-              <text className="text-lg">{item}</text>
+        {Array.from(elementList.get(name)?.entries() ?? []).length ? (
+          Array.from(elementList.get(name)?.entries() ?? []).map(
+            ([elementName, meta]) => (
+              <div className="border px-4 py-1 flex flex-col" key={elementName}>
+                <span className="text-lg">{elementName}</span>
 
-              <div className="flex">
-                <label className="mr-2">데이터 유형</label>
-                <select
-                  className="border rounded
-                text-white bg-black
-                outline-none"
-                  value={dataType}
-                  onChange={(e) => setDataType(e.target.value)}
-                >
-                  <option value="temp" selected>
-                    Temporary
-                  </option>
-                  <option value="payload">Payload</option>
-                </select>
-              </div>
-              {dataType === "payload" && (
                 <div className="flex">
-                  <label className="mr-2">데이터 그룹</label>
+                  <label className="mr-2">데이터 유형</label>
                   <select
-                    className="border rounded
-                text-white bg-black
-                outline-none"
-                    value={dataType}
-                    onChange={(e) => setDataType(e.target.value)}
+                    className="border rounded text-white bg-black outline-none"
+                    value={meta.type}
+                    onChange={(e) => {
+                      const newType = e.target.value as ListType;
+
+                      setElementList((prev) => {
+                        const outer = new Map(prev);
+                        const inner = new Map(outer.get(name) ?? []);
+
+                        inner.set(elementName, { ...meta, type: newType });
+                        outer.set(name, inner);
+
+                        return outer;
+                      });
+                    }}
                   >
-                    {}
+                    <option value="temp">Temporary</option>
+                    <option value="payload">Payload</option>
                   </select>
                 </div>
-              )}
-            </div>
-          ))
+
+                {meta.type === "payload" && (
+                  <div className="flex">
+                    <label className="mr-2">데이터 그룹</label>
+                    <select className="border rounded text-white bg-black outline-none">
+                      {/* payload 옵션 */}
+                    </select>
+                  </div>
+                )}
+              </div>
+            ),
+          )
         ) : (
           <div>요소가 없습니다.</div>
         )}

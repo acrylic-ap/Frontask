@@ -1,5 +1,11 @@
 import { atom } from "jotai";
 
-export const elementListState = atom<Map<string, string[]>>(
-  new Map<string, string[]>(),
+export type ListType = "temp" | "payload";
+
+interface ListVariable {
+  type: ListType;
+}
+
+export const elementListState = atom<Map<string, Map<string, ListVariable>>>(
+  new Map<string, Map<string, ListVariable>>(),
 );
