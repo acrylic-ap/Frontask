@@ -4,19 +4,30 @@
 
 - Key는 Element 혹은 Group이 사용되는지 알려 주며, 타입은 string이다.
 
-### ComponentItem
+#### ComponentItem
 
 {
   elementKey: Set<ElementKey>,
   groupKey: Set<GroupKey>
 }
 
-#### Elements
+### Elements
 
-> Map<string, { type: ElementType, group: ElementGroupKey }>
+> Map<string, ElementItem>
 
-- ElementType는 변수가 어떻게 사용되는지 결정되며, 타입은 "temp" | "state" | "payload" | "constant"이다.
-- ElementGroupKey는 payload일 경우에 어떤 그룹에 속하는지 나타낸다.
+#### ElementItem
+
+{
+role: ElementRole,
+group?: string,
+type: string,
+example: string
+}
+
+- ElementRole은 변수가 어떻게 사용되는지 결정되며, 타입은 "temp" | "state" | "payload" | "constant"이다. 기본은 temp이다.
+- group은 payload일 경우에 어떤 그룹에 속하는지 나타낸다.
+- type은 변수의 자료형을 나타내며, 타입은 "string" 등이 있다(그냥 js 자료형을 모두 포괄해서).
+- 이 변수의 역할을 안내하는 example이 있다.
 
 ### Groups
 
