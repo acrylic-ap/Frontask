@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### Components
 
-## Getting Started
+> Map<string, ComponentItem>
 
-First, run the development server:
+- Key는 Element 혹은 Group이 사용되는지 알려 주며, 타입은 string이다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### ComponentItem
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+{
+  elementKey: Set<ElementKey>,
+  groupKey: Set<GroupKey>
+}
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Elements
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Map<string, { type: ElementType, group: ElementGroupKey }>
 
-## Learn More
+- ElementType는 변수가 어떻게 사용되는지 결정되며, 타입은 "temp" | "state" | "payload" | "constant"이다.
+- ElementGroupKey는 payload일 경우에 어떤 그룹에 속하는지 나타낸다.
 
-To learn more about Next.js, take a look at the following resources:
+### Groups
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> Map<string, Set<ElementKey>>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Groups는 type이 payload 형식일 때 동일한 payload끼리 묶어 주는 변수이다.
 
-## Deploy on Vercel
+### 주의점
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 여기에 있는 Map 전부 겹치지 않게 막는 로직 필요
